@@ -1,10 +1,16 @@
+import clsx from 'clsx'
 import React from 'react'
+import { twMerge } from 'tailwind-merge'
 
-const Button = () => {
+const Button = ({ children, onClick, className, type = 'button' }) => {
     return (
-        <div>
-
-        </div>
+        <button
+            type={type}
+            onClick={onClick}
+            className={twMerge(clsx('py-3 px-4 text-white bg-main-700 rounded-md'), className)}
+        >
+            {children}
+        </button>
     )
 }
 
