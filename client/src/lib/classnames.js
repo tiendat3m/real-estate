@@ -1,0 +1,1 @@
+export const navItemCn = 'rounded-md hover:bg-stone-100 cursor-pointer px-4 py-[6px] text-sm'
