@@ -12,7 +12,7 @@ const PublicHeader = () => {
     return (
         <div className='h-24 p-4 flex items-center shadow justify-between'>
             <div className='space-x-[26px] flex items-center gap-6'>
-                <Link to={'/'} className='text-5xl tracking-widest text-shadow text-blue-500 font-bold'>
+                <Link to={'/'} className='text-5xl tracking-widest text-shadow text-main font-bold'>
                     REST06
                 </Link>
                 <NavigationMenu>
