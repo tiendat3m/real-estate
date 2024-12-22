@@ -1,4 +1,3 @@
-import { bannerLogin } from '@/assets/jpg'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { set, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -6,6 +5,7 @@ import { Form } from '@/components/ui/form'
 import { FormInput } from '@/components/form'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
+import { useGoogleLogin, useGoogleOneTapLogin } from '@react-oauth/google';
 
 const formSchema = z.object({
     emailOrPhone: z.string().min(1, { message: 'Trường này bắt buộc' }),
@@ -27,11 +27,16 @@ const Login = () => {
             fullname: ''
         }
     })
-    console.log(form)
+
+    const handleSignInByGoogle = useGoogleLogin({
+        onSuccess: tokenResponse => console.log(tokenResponse),
+        onError: err => console.log(err)
+    })
+
     return (
         <div className='grid grid-cols-10 '>
             <div className='col-span-4 grid place-items-center'>
-                <img src={bannerLogin} alt="Login" className='w-full object-contain' />
+                <img src='/jpg/banner-login.jpg' alt="Login" className='w-full object-contain' />
             </div>
             <div className='col-span-6 p-8'>
                 <p className='font-bold text-base'>Xin chào bạn</p>
@@ -49,6 +54,12 @@ const Login = () => {
                     <div className='w-full h-[1px] bg-slate-200'></div>
                     <div className='absolute inset-0 bg-transparent '><p className='px-2 mx-auto w-fit text-sm text-primary bg-white'>Hoặc</p></div>
                 </div>
+
+                <Button variant='outline' className='w-full mb-4'>
+                    <img src="svg/google.svg" alt="Google" className='w-5 h-5 object-cover' />
+                    <span onClick={handleSignInByGoogle}>Đăng nhập bằng google</span>
+                </Button>
+
                 <p className='text-center text-sm'>
                     {variant === 'SIGNIN' ? <span>Bạn chưa là thành viên? </span> : <span>Bạn đã có tài khoản? </span>}
                     <span onClick={toggleVariant} className='text-red-600 font-bold cursor-pointer hover:underline'>{variant === 'SIGNIN' ? 'Đăng kí' : 'Đăng nhập'}</span>

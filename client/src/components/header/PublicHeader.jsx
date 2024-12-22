@@ -43,7 +43,7 @@ const PublicHeader = () => {
                     <DialogTrigger asChild>
                         <Button className='bg-transparent text-stone-900 hover:bg-transparent hover:underline'>Đăng nhập / Đăng kí</Button>
                     </DialogTrigger>
-                    <DialogContent className='min-w-[700px] p-0' isHideClose={true}>
+                    <DialogContent className='min-w-[800px] p-0' isHideClose={true}>
                         <DialogHeader>
                             <DialogTitle></DialogTitle>
                             <Login />
