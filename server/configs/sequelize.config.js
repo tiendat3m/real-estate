@@ -2,7 +2,7 @@ require('dotenv').config()
 
 module.exports = {
     development: {
-        usename: process.env.DB_USERNAME,
+        username: process.env.DB_USERNAME,
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
         dialect: process.env.DB_DIALECT,
@@ -11,7 +11,7 @@ module.exports = {
         timezone: '+07'
     },
     production: {
-        usename: process.env.DB_USERNAME,
+        username: process.env.DB_USERNAME,
         database: process.env.DB_NAME,
         password: process.env.DB_PASSWORD,
         dialect: process.env.DB_DIALECT,
