@@ -1,5 +1,14 @@
 require('dotenv').config()
 
+const checkEnv = () => {
+    if (!process.env.DB_USERNAME || !process.env.DB_PASSWORD || !process.env.DB_NAME || !process.env.DB_DIALECT || !process.env.DB_HOST) {
+        console.error('Missing required environment variables for database configuration.');
+        process.exit(1);
+    }
+};
+
+checkEnv();
+
 module.exports = {
     development: {
         username: process.env.DB_USERNAME,
