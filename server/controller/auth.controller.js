@@ -28,5 +28,14 @@ module.exports = {
             success: !!token,
             accessToken: token,
         })
+    }),
+    checkNewUser: asyncHandler(async (req, res) => {
+        const { email } = req.params
+        const user = await db.User.findOne({ where: { email } })
+
+        return res.json({
+            success: true,
+            hasUser: !!user
+        })
     })
 }

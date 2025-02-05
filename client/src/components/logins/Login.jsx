@@ -6,6 +6,8 @@ import { FormInput } from '@/components/form'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useGoogleLogin, useGoogleOneTapLogin } from '@react-oauth/google';
+import { apiGetNewUser } from "@/apis/auth"
+import { apiGetCredentialFromAccessToken } from "@/apis/external"
 
 const formSchema = z.object({
     emailOrPhone: z.string().min(1, { message: 'Trường này bắt buộc' }),
@@ -29,7 +31,14 @@ const Login = () => {
     })
 
     const handleSignInByGoogle = useGoogleLogin({
-        onSuccess: tokenResponse => console.log(tokenResponse),
+        onSuccess: async (tokenResponse) => {
+            const response = await apiGetCredentialFromAccessToken(tokenResponse?.access_token)
+            console.log(response)
+            if (response.status === 200) {
+                const user = await apiGetNewUser(response.data.email)
+                console.log(user)
+            }
+        },
         onError: err => console.log(err)
     })
 
