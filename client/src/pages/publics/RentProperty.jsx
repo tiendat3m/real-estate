@@ -1,11 +1,7 @@
-import React from 'react'
+import PropertyListing from './PropertyListing'
 
 const RentProperty = () => {
-    return (
-        <div>
-
-        </div>
-    )
+    return <PropertyListing listingType="Cho thuê" />
 }
 
 export default RentProperty

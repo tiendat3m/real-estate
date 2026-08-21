@@ -1,0 +1,5 @@
+export { default as AdminDashboard } from './AdminDashboard'
+export { default as AdminPosts } from './AdminPosts'
+export { default as AdminLeads } from './AdminLeads'
+export { default as AdminReports } from './AdminReports'
+export { default as AdminUsers } from './AdminUsers'

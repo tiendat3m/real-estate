@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 const cors = require('cors')
 const express = require('express')
 const { connectDatabase } = require('./configs/dbConnect')
@@ -13,6 +14,9 @@ app.use(cors({
 
 app.use(express.json({ limit: '5mb' }))
 app.use(express.urlencoded({ extended: true, limit: '5mb' }))
+
+// Serve ảnh tĩnh từ public/uploads
+app.use('/static', express.static(path.join(__dirname, 'public', 'uploads')))
 
 connectDatabase()
 initRoutes(app)

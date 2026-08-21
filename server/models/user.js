@@ -10,7 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.Post, { foreignKey: 'idUser', as: 'posts' });
+      User.hasMany(models.Comment, { foreignKey: 'idUser', as: 'comments' });
+      User.hasMany(models.Rating, { foreignKey: 'idUser', as: 'ratings' });
+      User.hasMany(models.Wishlist, { foreignKey: 'idUser', as: 'wishlists' });
+      User.hasMany(models.Lead, { foreignKey: 'idUser', as: 'leads' });
+      User.hasMany(models.Report, { foreignKey: 'idUser', as: 'reports' });
     }
   }
   User.init({
@@ -26,6 +31,18 @@ module.exports = (sequelize, DataTypes) => {
     resetPwdToken: DataTypes.STRING,
     resetPwdExpiry: DataTypes.DATE,
     idPricing: DataTypes.INTEGER,
+    role: {
+      type: DataTypes.ENUM,
+      values: ['user', 'admin'],
+      defaultValue: 'user',
+    },
+    userStatus: {
+      type: DataTypes.ENUM,
+      values: ['active', 'banned'],
+      defaultValue: 'active',
+    },
+    verifiedAgent: { type: DataTypes.BOOLEAN, defaultValue: false },
+    companyName: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'User',

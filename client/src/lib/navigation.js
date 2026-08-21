@@ -1,25 +1,24 @@
-import { postRentTypes, postSoldTypes } from "./constants"
-import { pathnames } from "./pathname"
-
+import { postRentTypes, postSoldTypes } from './constants'
+import { pathnames } from './pathname'
 
 const navigations = [
     {
         id: 1,
-        name: "Nhà đất bán",
+        name: 'Nhà đất bán',
         pathname: pathnames.publics.soldProperty,
         hasSub: true,
-        subs: postSoldTypes
+        subs: postSoldTypes,
     },
     {
         id: 2,
-        name: "Nhà đất cho thuê",
+        name: 'Nhà đất cho thuê',
         pathname: pathnames.publics.rentProperty,
         hasSub: true,
-        subs: postRentTypes
+        subs: postRentTypes,
     },
     {
         id: 3,
-        name: "Tin tức",
+        name: 'Tin tức',
         pathname: pathnames.publics.news,
         hasSub: false,
     },

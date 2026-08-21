@@ -11,7 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Post.belongsTo(models.User, { foreignKey: 'idUser', as: 'user' });
+      Post.hasMany(models.Comment, { foreignKey: 'idPost', as: 'comments' });
+      Post.hasMany(models.Rating, { foreignKey: 'idPost', as: 'ratings' });
+      Post.hasMany(models.Lead, { foreignKey: 'idPost', as: 'leads' });
+      Post.hasMany(models.Report, { foreignKey: 'idPost', as: 'reports' });
+      Post.belongsToMany(models.Tag, {
+        through: models.Tag_Post,
+        foreignKey: 'idPost',
+        otherKey: 'idTag',
+        as: 'tags',
+      });
     }
   }
   Post.init({
@@ -55,6 +65,31 @@ module.exports = (sequelize, DataTypes) => {
     expiredBoost: DataTypes.DATE,
     address: DataTypes.STRING,
     idUser: DataTypes.INTEGER,
+    images: DataTypes.TEXT,
+    views: { type: DataTypes.INTEGER, defaultValue: 0 },
+    slug: DataTypes.STRING,
+    coverImage: DataTypes.STRING,
+    approvalStatus: {
+      type: DataTypes.ENUM,
+      values: ['pending', 'approved', 'rejected'],
+      defaultValue: 'pending',
+    },
+    availabilityStatus: {
+      type: DataTypes.ENUM,
+      values: ['available', 'negotiating', 'handed_over', 'hidden'],
+      defaultValue: 'available',
+    },
+    rejectReason: DataTypes.TEXT,
+    legalStatus: DataTypes.STRING,
+    provinceCode: DataTypes.STRING,
+    districtCode: DataTypes.STRING,
+    wardCode: DataTypes.STRING,
+    latitude: DataTypes.DECIMAL(10, 7),
+    longitude: DataTypes.DECIMAL(10, 7),
+    isFeatured: { type: DataTypes.BOOLEAN, defaultValue: false },
+    isBoosted: { type: DataTypes.BOOLEAN, defaultValue: false },
+    featuredUntil: DataTypes.DATE,
+    boostedUntil: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Post',
