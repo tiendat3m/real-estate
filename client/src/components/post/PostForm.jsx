@@ -7,7 +7,7 @@ import { apiUploadImages } from '@/apis/post'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { availabilityStatuses, directions, legalStatuses, listingTypes, propertyTypes, provinceNames } from '@/lib/constants'
+import { availabilityStatuses, directions, getDistrictsByProvince, getPropertyTypesForListing, isHomestay, legalStatuses, listingTypes, provinceNames } from '@/lib/constants'
 import { toast } from '@/lib/utils'
 
 const schema = z.object({
@@ -104,6 +104,15 @@ const PostForm = ({ initialPost, submitLabel = 'Lưu tin', onSubmit }) => {
 
     const defaultValues = useMemo(() => ({ ...baseValues, ...(initialPost || {}) }), [initialPost])
     const form = useForm({ resolver: zodResolver(schema), defaultValues })
+    const listingType = form.watch('listingType')
+    const propertyType = form.watch('propertyType')
+    const province = form.watch('province')
+    const district = form.watch('district')
+    const propertyOptions = useMemo(() => getPropertyTypesForListing(listingType), [listingType])
+    const districtOptions = useMemo(() => getDistrictsByProvince(province), [province])
+    const priceLabel = listingType === 'Cho thuê'
+        ? isHomestay(propertyType) ? 'Giá thuê theo đêm (VND)' : 'Giá thuê theo tháng (VND)'
+        : 'Giá bán (VND)'
 
     useEffect(() => {
         form.reset(defaultValues)
@@ -112,6 +121,18 @@ const PostForm = ({ initialPost, submitLabel = 'Lưu tin', onSubmit }) => {
         setCoverImage(initialPost?.coverImage || currentImages[0] || '')
         setTagsText((initialPost?.tags || []).map((tag) => tag.tag || tag).join(', '))
     }, [defaultValues, form, initialPost])
+
+    useEffect(() => {
+        if (propertyType && !propertyOptions.includes(propertyType)) {
+            form.setValue('propertyType', '')
+        }
+    }, [form, propertyOptions, propertyType])
+
+    useEffect(() => {
+        if (district && districtOptions.length && !districtOptions.includes(district)) {
+            form.setValue('district', '')
+        }
+    }, [district, districtOptions, form])
 
     const uploadImages = async (event) => {
         const files = Array.from(event.target.files || [])
@@ -162,13 +183,13 @@ const PostForm = ({ initialPost, submitLabel = 'Lưu tin', onSubmit }) => {
                     <InputField form={form} name="title" label="Tiêu đề" placeholder="Ví dụ: Nhà phố trung tâm, hẻm xe hơi" />
                     <InputField form={form} name="address" label="Địa chỉ" placeholder="Số nhà, đường, phường..." />
                     <SelectField form={form} name="listingType" label="Nhu cầu" options={listingTypes} />
-                    <SelectField form={form} name="propertyType" label="Loại BĐS" options={propertyTypes} />
+                    <SelectField form={form} name="propertyType" label="Loại BĐS" options={propertyOptions} />
                     <SelectField form={form} name="availabilityStatus" label="Tình trạng giao dịch" options={availabilityStatuses} />
                     <SelectField form={form} name="legalStatus" label="Pháp lý" options={legalStatuses} placeholder="Không chọn" />
                     <SelectField form={form} name="province" label="Tỉnh thành" options={provinceNames} />
-                    <InputField form={form} name="district" label="Quận/Huyện" />
+                    <SelectField form={form} name="district" label="Quận/Huyện" options={districtOptions} placeholder={province ? 'Chọn quận/huyện' : 'Chọn tỉnh trước'} />
                     <InputField form={form} name="ward" label="Phường/Xã" />
-                    <InputField form={form} name="price" label="Giá (VND)" type="number" />
+                    <InputField form={form} name="price" label={priceLabel} type="number" />
                     <InputField form={form} name="size" label="Diện tích (m²)" type="number" />
                     <InputField form={form} name="bedroom" label="Phòng ngủ" type="number" />
                     <InputField form={form} name="bathroom" label="Phòng tắm" type="number" />
@@ -178,6 +199,12 @@ const PostForm = ({ initialPost, submitLabel = 'Lưu tin', onSubmit }) => {
                     <InputField form={form} name="latitude" label="Vĩ độ" type="number" />
                     <InputField form={form} name="longitude" label="Kinh độ" type="number" />
                 </div>
+
+                {isHomestay(propertyType) && (
+                    <div className="rounded-md border border-rose-100 bg-rose-50 p-3 text-sm text-rose-700">
+                        Homestay nên ghi rõ giá theo đêm, số khách tối đa, giờ check-in/check-out, phụ thu cuối tuần và tiện ích như bếp, máy giặt, chỗ đậu xe.
+                    </div>
+                )}
 
                 <FormField
                     control={form.control}

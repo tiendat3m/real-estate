@@ -1,6 +1,7 @@
 export { default as PublicLayout } from './PublicLayout'
 export { default as HomePage } from './HomePage'
 export { default as News } from './News'
+export { default as NewsDetail } from './NewsDetail'
 export { default as SoldProperty } from './SoldProperty'
 export { default as RentProperty } from './RentProperty'
 export { default as PropertyListing } from './PropertyListing'

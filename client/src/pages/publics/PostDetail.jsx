@@ -224,7 +224,7 @@ const PostDetail = () => {
                             <h1 className="text-3xl font-bold leading-tight text-primary">{post.title}</h1>
                             <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                                 <div>
-                                    <p className="text-2xl font-bold text-main">{formatPrice(post.price, post.listingType)}</p>
+                                    <p className="text-2xl font-bold text-main">{formatPrice(post.price, post.listingType, post.propertyType)}</p>
                                     <p className="mt-1 flex items-center gap-1 text-sm text-slate-500"><MapPin className="h-4 w-4 shrink-0" /> {address}</p>
                                 </div>
                                 <div className="flex items-center gap-4 text-sm text-slate-500">
@@ -275,7 +275,7 @@ const PostDetail = () => {
                     <aside className="h-fit space-y-4 lg:sticky lg:top-20">
                         <div className="rounded-lg border bg-white p-5 shadow-sm">
                             <p className="text-sm text-slate-500">Giá</p>
-                            <p className="mt-1 text-2xl font-bold text-main">{formatPrice(post.price, post.listingType)}</p>
+                            <p className="mt-1 text-2xl font-bold text-main">{formatPrice(post.price, post.listingType, post.propertyType)}</p>
                             <div className="mt-3 flex items-center gap-2">
                                 <RatingStars value={post.avgScore || 0} />
                                 <span className="text-sm text-slate-500">{post.avgScore || 0} ({post.ratingCount || 0} đánh giá)</span>

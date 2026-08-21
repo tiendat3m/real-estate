@@ -3,6 +3,8 @@ export const pathnames = {
         layout: '/',
         homepage: '',
         news: '/tin-tuc',
+        newsDetail: '/tin-tuc/:slug',
+        newsDetailBySlug: (slug) => `/tin-tuc/${slug}`,
         rentProperty: '/nha-dat-cho-thue',
         soldProperty: '/nha-dat-ban',
         postDetail: '/post/:idDetail',

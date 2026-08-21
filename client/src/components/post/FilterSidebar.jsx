@@ -1,76 +1,121 @@
-import { propertyTypes, provinceNames, soldPriceRanges, rentPriceRanges, directions } from '@/lib/constants'
+import { areaRanges, directions, getDistrictsByProvince, getPropertyTypesForListing, getRentPriceRanges, provinceNames, soldPriceRanges } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { X } from 'lucide-react'
+import { CheckCircle2, Image, X } from 'lucide-react'
 
-// filters: object state; onApply(filters), onReset
 const FilterSidebar = ({ listingType, filters, setFilters, onApply, onReset }) => {
-    const priceRanges = listingType === 'Cho thuê' ? rentPriceRanges : soldPriceRanges
+    const propertyOptions = getPropertyTypesForListing(listingType)
+    const districtOptions = getDistrictsByProvince(filters.province)
+    const priceRanges = listingType === 'Cho thuê' ? getRentPriceRanges(filters.propertyType) : soldPriceRanges
     const update = (patch) => setFilters({ ...filters, ...patch })
 
     return (
-        <aside className="w-full lg:w-64 shrink-0 bg-white border rounded-lg p-4 lg:sticky lg:top-28 h-fit">
-            <div className="flex items-center justify-between mb-3">
+        <aside className="w-full shrink-0 rounded-lg border bg-white p-4 lg:sticky lg:top-28 lg:w-72">
+            <div className="mb-3 flex items-center justify-between">
                 <h3 className="font-bold text-main">Bộ lọc</h3>
-                <button onClick={onReset} className="text-xs text-red-500 hover:underline flex items-center gap-1">
-                    <X className="w-3 h-3" /> Xoá lọc
+                <button onClick={onReset} className="flex items-center gap-1 text-xs text-red-500 hover:underline">
+                    <X className="h-3 w-3" /> Xóa lọc
                 </button>
             </div>
 
             <div className="space-y-4 text-sm">
                 <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Tỉnh thành</label>
-                    <select className="w-full h-9 rounded border border-slate-300 px-2" value={filters.province || ''} onChange={(e) => update({ province: e.target.value })}>
+                    <label className="mb-1 block text-xs font-semibold text-slate-500">Loại nhà đất</label>
+                    <select className="h-9 w-full rounded border border-slate-300 px-2" value={filters.propertyType || ''} onChange={(e) => update({ propertyType: e.target.value, minPrice: '', maxPrice: '' })}>
                         <option value="">Tất cả</option>
-                        {provinceNames.map((p) => <option key={p} value={p}>{p}</option>)}
+                        {propertyOptions.map((item) => <option key={item} value={item}>{item}</option>)}
                     </select>
                 </div>
 
                 <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Loại BĐS</label>
-                    <select className="w-full h-9 rounded border border-slate-300 px-2" value={filters.propertyType || ''} onChange={(e) => update({ propertyType: e.target.value })}>
-                        <option value="">Tất cả</option>
-                        {propertyTypes.map((p) => <option key={p} value={p}>{p}</option>)}
+                    <label className="mb-1 block text-xs font-semibold text-slate-500">Tỉnh thành</label>
+                    <select className="h-9 w-full rounded border border-slate-300 px-2" value={filters.province || ''} onChange={(e) => update({ province: e.target.value, district: '' })}>
+                        <option value="">Toàn quốc</option>
+                        {provinceNames.map((item) => <option key={item} value={item}>{item}</option>)}
                     </select>
                 </div>
 
                 <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-2">Khoảng giá</label>
+                    <label className="mb-1 block text-xs font-semibold text-slate-500">Quận/Huyện</label>
+                    <select className="h-9 w-full rounded border border-slate-300 px-2 disabled:bg-slate-50 disabled:text-slate-400" value={filters.district || ''} onChange={(e) => update({ district: e.target.value })} disabled={!filters.province}>
+                        <option value="">{filters.province ? 'Tất cả quận/huyện' : 'Chọn tỉnh trước'}</option>
+                        {districtOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+                    </select>
+                </div>
+
+                <div>
+                    <label className="mb-2 block text-xs font-semibold text-slate-500">Khoảng giá</label>
                     <div className="space-y-1">
-                        {priceRanges.map((r) => {
-                            const active = filters.minPrice == r.min && filters.maxPrice == r.max
+                        {priceRanges.map((range) => {
+                            const active = Number(filters.minPrice) === range.min && String(filters.maxPrice || '') === String(range.max || '')
                             return (
                                 <button
-                                    key={r.label}
-                                    onClick={() => update({ minPrice: r.min, maxPrice: r.max || '' })}
-                                    className={cn('block w-full text-left px-2 py-1 rounded', active ? 'bg-main text-white' : 'hover:bg-slate-100')}
+                                    type="button"
+                                    key={range.label}
+                                    onClick={() => update({ minPrice: range.min, maxPrice: range.max || '' })}
+                                    className={cn('block w-full rounded px-2 py-1.5 text-left', active ? 'bg-main text-white' : 'hover:bg-slate-100')}
                                 >
-                                    {r.label}
+                                    {range.label}
                                 </button>
                             )
                         })}
-                        <button onClick={() => update({ minPrice: '', maxPrice: '' })} className="block w-full text-left px-2 py-1 rounded text-xs text-slate-400 hover:underline">
+                        <button type="button" onClick={() => update({ minPrice: '', maxPrice: '' })} className="block w-full rounded px-2 py-1 text-left text-xs text-slate-400 hover:underline">
                             Bỏ chọn giá
                         </button>
                     </div>
                 </div>
 
                 <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Diện tích (m²)</label>
-                    <div className="flex gap-2">
-                        <input type="number" placeholder="Từ" className="w-1/2 h-9 rounded border border-slate-300 px-2" value={filters.minSize || ''} onChange={(e) => update({ minSize: e.target.value })} />
-                        <input type="number" placeholder="Đến" className="w-1/2 h-9 rounded border border-slate-300 px-2" value={filters.maxSize || ''} onChange={(e) => update({ maxSize: e.target.value })} />
+                    <label className="mb-2 block text-xs font-semibold text-slate-500">Diện tích</label>
+                    <div className="grid grid-cols-2 gap-1">
+                        {areaRanges.map((range) => {
+                            const active = Number(filters.minSize) === range.min && String(filters.maxSize || '') === String(range.max || '')
+                            return (
+                                <button
+                                    type="button"
+                                    key={range.label}
+                                    onClick={() => update({ minSize: range.min, maxSize: range.max || '' })}
+                                    className={cn('rounded px-2 py-1.5 text-left text-xs', active ? 'bg-main text-white' : 'bg-slate-50 hover:bg-slate-100')}
+                                >
+                                    {range.label}
+                                </button>
+                            )
+                        })}
+                    </div>
+                    <div className="mt-2 flex gap-2">
+                        <input type="number" placeholder="Từ" className="h-9 w-1/2 rounded border border-slate-300 px-2" value={filters.minSize || ''} onChange={(e) => update({ minSize: e.target.value })} />
+                        <input type="number" placeholder="Đến" className="h-9 w-1/2 rounded border border-slate-300 px-2" value={filters.maxSize || ''} onChange={(e) => update({ maxSize: e.target.value })} />
                     </div>
                 </div>
 
-                <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Hướng</label>
-                    <select className="w-full h-9 rounded border border-slate-300 px-2" value={filters.direction || ''} onChange={(e) => update({ direction: e.target.value })}>
-                        <option value="">Tất cả</option>
-                        {directions.map((d) => <option key={d} value={d}>{d}</option>)}
-                    </select>
+                <div className="grid grid-cols-2 gap-2">
+                    <div>
+                        <label className="mb-1 block text-xs font-semibold text-slate-500">Phòng ngủ</label>
+                        <select className="h-9 w-full rounded border border-slate-300 px-2" value={filters.minBedroom || ''} onChange={(e) => update({ minBedroom: e.target.value })}>
+                            <option value="">Tất cả</option>
+                            {[1, 2, 3, 4].map((item) => <option key={item} value={item}>Từ {item}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="mb-1 block text-xs font-semibold text-slate-500">Hướng</label>
+                        <select className="h-9 w-full rounded border border-slate-300 px-2" value={filters.direction || ''} onChange={(e) => update({ direction: e.target.value })}>
+                            <option value="">Tất cả</option>
+                            {directions.map((item) => <option key={item} value={item}>{item}</option>)}
+                        </select>
+                    </div>
                 </div>
 
-                <button onClick={onApply} className="w-full h-9 rounded bg-main text-white text-sm font-medium hover:bg-main/90">
+                <div className="space-y-2 rounded-md bg-slate-50 p-3">
+                    <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <input type="checkbox" className="h-4 w-4 accent-main" checked={filters.hasImages === 'true'} onChange={(e) => update({ hasImages: e.target.checked ? 'true' : '' })} />
+                        <Image className="h-4 w-4" /> Có hình ảnh
+                    </label>
+                    <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <input type="checkbox" className="h-4 w-4 accent-main" checked={filters.verified === 'true'} onChange={(e) => update({ verified: e.target.checked ? 'true' : '' })} />
+                        <CheckCircle2 className="h-4 w-4" /> Tin xác thực
+                    </label>
+                </div>
+
+                <button onClick={onApply} className="h-10 w-full rounded bg-main text-sm font-bold text-white hover:bg-main/90">
                     Áp dụng
                 </button>
             </div>

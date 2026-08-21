@@ -80,7 +80,7 @@ const MyPosts = () => {
                                         <p className="text-xs text-slate-500">{post.province} · {post.propertyType}</p>
                                         {post.rejectReason && <p className="mt-1 max-w-xs text-xs text-red-500">{post.rejectReason}</p>}
                                     </td>
-                                    <td className="p-3 font-semibold text-main">{formatPrice(post.price, post.listingType)}</td>
+                                    <td className="p-3 font-semibold text-main">{formatPrice(post.price, post.listingType, post.propertyType)}</td>
                                     <td className="p-3">{formatArea(post.size)}</td>
                                     <td className="p-3">
                                         <span className={cn('rounded px-2 py-1 text-xs font-semibold', approvalCn[post.approvalStatus] || 'bg-slate-100 text-slate-600')}>

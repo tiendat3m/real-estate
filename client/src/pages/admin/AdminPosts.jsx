@@ -114,7 +114,7 @@ const AdminPosts = () => {
                                         </div>
                                     </td>
                                     <td className="p-3">{post.user?.fullname || post.user?.email || '-'}</td>
-                                    <td className="p-3 font-semibold text-main">{formatPrice(post.price, post.listingType)}</td>
+                                    <td className="p-3 font-semibold text-main">{formatPrice(post.price, post.listingType, post.propertyType)}</td>
                                     <td className="p-3">
                                         <select className="h-9 rounded border border-slate-300 px-2" value={post.approvalStatus || 'pending'} onChange={(e) => updatePost(post, { approvalStatus: e.target.value })}>
                                             {approvalStatuses.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}

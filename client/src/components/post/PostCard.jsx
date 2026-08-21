@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Bath, BedDouble, CheckCircle2, Eye, MapPin, Maximize, Star } from 'lucide-react'
-import { availabilityStatuses, formatArea, formatPrice, labelOf } from '@/lib/constants'
+import { availabilityStatuses, formatArea, formatPrice, isHomestay, labelOf } from '@/lib/constants'
 import { pathnames } from '@/lib/pathname'
 import { cn } from '@/lib/utils'
 
@@ -19,6 +19,11 @@ const PostCard = ({ post }) => {
                 <span className={cn('absolute left-2 top-2 rounded px-2 py-1 text-xs font-bold text-white', isRent ? 'bg-amber-500' : 'bg-main')}>
                     {post.listingType}
                 </span>
+                {isHomestay(post.propertyType) && (
+                    <span className="absolute left-2 top-10 rounded bg-rose-500 px-2 py-1 text-xs font-bold text-white">
+                        Homestay
+                    </span>
+                )}
                 {post.verified && (
                     <span className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full bg-emerald-500 text-white">
                         <CheckCircle2 className="h-4 w-4" />
@@ -27,8 +32,9 @@ const PostCard = ({ post }) => {
                 {post.isFeatured && <span className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white">Nổi bật</span>}
             </div>
             <div className="p-3">
-                <p className="truncate text-lg font-bold text-main">{formatPrice(post.price, post.listingType)}</p>
+                <p className="truncate text-lg font-bold text-main">{formatPrice(post.price, post.listingType, post.propertyType)}</p>
                 <p className="mt-1 min-h-[40px] text-sm font-medium text-slate-800 line-clamp-2">{post.title}</p>
+                <p className="mt-1 text-xs font-semibold text-slate-500">{post.propertyType}</p>
                 <p className="mt-1 flex items-center gap-1 truncate text-xs text-slate-500">
                     <MapPin className="h-3 w-3 shrink-0" /> {post.address || `${post.district}, ${post.province}`}
                 </p>

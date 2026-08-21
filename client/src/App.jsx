@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import ScrollToTop from '@/components/ScrollToTop'
 import useMeStore from '@/zustand/useMeStore'
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
 
   return (
     <main>
+      <ScrollToTop />
       <Outlet />
     </main>
   )

@@ -6,7 +6,7 @@ import MemberLayout from "./components/layout/MemberLayout"
 import { pathnames } from "./lib/pathname"
 import { AdminDashboard, AdminLeads, AdminPosts, AdminReports, AdminUsers } from "./pages/admin"
 import { CreatePost, EditPost, MemberDashboard, MemberLeads, MyPosts, Profile, WishlistPage } from "./pages/member"
-import { HomePage, News, PostDetail, PublicLayout, RentProperty, SoldProperty } from "./pages/publics"
+import { HomePage, News, NewsDetail, PostDetail, PublicLayout, RentProperty, SoldProperty } from "./pages/publics"
 
 const childPath = (path) => path.replace(/^\//, '')
 
@@ -26,6 +26,10 @@ const routes = [
                     {
                         path: childPath(pathnames.publics.news),
                         element: <News />
+                    },
+                    {
+                        path: childPath(pathnames.publics.newsDetail),
+                        element: <NewsDetail />
                     },
                     {
                         path: childPath(pathnames.publics.soldProperty),
